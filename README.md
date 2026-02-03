@@ -1,17 +1,134 @@
-# $ResourceName
+# Active Directory Domain Services (Entra DS)
 
- This terraform module simplifies the creation and management of azure $ResourcName resources, providing customizable options for access policies, key and secret management, and auditing, all managed through code.
+ This terraform module simplifies the creation and management of azure active directory domain services resources, providing customizable options for domain configuration, replica sets, forest trusts, and security settings, all managed through code.
 
 ## Features
 
-Capability to...
+Capability to deploy managed domain controllers.
 
-Includes support for...
+Includes support for replica sets across multiple regions for high availability.
+
+Supports forest trusts with on-premises Active Directory domains.
+
+Configurable security settings including NTLM, Kerberos, and TLS options.
+
+Notification support for domain administrators and global administrators.
+
+Secure LDAP configuration capabilities.
 
 Utilization of terratest for robust validation.
 
 <!-- BEGIN_TF_DOCS -->
+## Requirements
 
+The following requirements are needed by this module:
+
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.0)
+
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+
+## Providers
+
+The following providers are used by this module:
+
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 4.0)
+
+## Resources
+
+The following resources are used by this module:
+
+- [azurerm_active_directory_domain_service.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service) (resource)
+- [azurerm_active_directory_domain_service_replica_set.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service_replica_set) (resource)
+- [azurerm_active_directory_domain_service_trust.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service_trust) (resource)
+
+## Required Inputs
+
+The following input variables are required:
+
+### <a name="input_config"></a> [config](#input\_config)
+
+Description: contains domain service configuration
+
+Type:
+
+```hcl
+object({
+    name                  = string
+    resource_group_name   = optional(string)
+    location              = optional(string)
+    domain_name           = string
+    sku                   = optional(string, "Standard")
+    filtered_sync_enabled = optional(bool, false)
+    tags                  = optional(map(string))
+
+    initial_replica_set = object({
+      subnet_id = string
+    })
+
+    notifications = optional(object({
+      additional_recipients = optional(list(string), [])
+      notify_dc_admins      = optional(bool, true)
+      notify_global_admins  = optional(bool, true)
+    }))
+
+    secure_ldap = optional(object({
+      enabled                  = bool
+      pfx_certificate          = string
+      pfx_certificate_password = string
+      external_access_enabled  = optional(bool, false)
+    }))
+
+    security = optional(object({
+      sync_kerberos_passwords         = optional(bool, true)
+      sync_ntlm_passwords             = optional(bool, true)
+      sync_on_prem_passwords          = optional(bool, true)
+      ntlm_v1_enabled                 = optional(bool, false)
+      tls_v1_enabled                  = optional(bool, false)
+      kerberos_rc4_encryption_enabled = optional(bool, false)
+      kerberos_armoring_enabled       = optional(bool, false)
+    }))
+
+    replica_sets = optional(map(object({
+      location  = string
+      subnet_id = string
+    })), {})
+
+    trusts = optional(map(object({
+      name                   = optional(string)
+      trusted_domain_fqdn    = string
+      trusted_domain_dns_ips = list(string)
+      password               = string
+    })), {})
+  })
+```
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### <a name="input_tags"></a> [tags](#input\_tags)
+
+Description: tags to be added to the resources
+
+Type: `map(string)`
+
+Default: `{}`
+
+## Outputs
+
+The following outputs are exported:
+
+### <a name="output_domain_service"></a> [domain\_service](#output\_domain\_service)
+
+Description: contains all domain service configuration
+
+### <a name="output_replica_sets"></a> [replica\_sets](#output\_replica\_sets)
+
+Description: contains all replica sets
+
+### <a name="output_trusts"></a> [trusts](#output\_trusts)
+
+Description: contains all domain trusts
 <!-- END_TF_DOCS -->
 
 ## Goals
@@ -32,7 +149,7 @@ To update the module's documentation run `make doc`
 
 ## Authors
 
-Module is maintained by [these awesome contributors](https://github.com/cloudnationhq/terraform-azure-$ResourceName/graphs/contributors).
+Module is maintained by [these awesome contributors](https://github.com/cloudnationhq/terraform-azure-entra-ds/graphs/contributors).
 
 ## Contributors
 
@@ -40,8 +157,8 @@ We welcome contributions from the community! Whether it's reporting a bug, sugge
 
 For more information, please see our contribution [guidelines](./CONTRIBUTING.md). <br><br>
 
-<a href="https://github.com/cloudnationhq/terraform-azure-$ResourceName/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=cloudnationhq/terraform-azure-$ResourceName" />
+<a href="https://github.com/cloudnationhq/terraform-azure-entra-ds/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cloudnationhq/terraform-azure-entra-ds" />
 </a>
 
 ## License
@@ -50,6 +167,6 @@ MIT Licensed. See [LICENSE](./LICENSE) for full details.
 
 ## References
 
-- [Documentation](https://learn.microsoft.com/en-us/azure/$ResourceName/)
-- [Rest Api](https://learn.microsoft.com/en-us/rest/api/$ResourceName/)
-- [Rest Api Specs](https://github.com/Azure/azure-rest-api-specs/tree/1f449b5a17448f05ce1cd914f8ed75a0b568d130/specification/$rResourceName)
+- [Documentation](https://learn.microsoft.com/en-us/entra/identity/domain-services/)
+- [Rest Api](https://learn.microsoft.com/en-us/rest/api/activedirectory/)
+- [Rest Api Specs](https://github.com/Azure/azure-rest-api-specs/tree/main/specification/domainservices)

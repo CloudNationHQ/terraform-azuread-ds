@@ -25,11 +25,15 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.0)
 
+- <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) (~> 3.0)
+
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
 
 ## Providers
 
 The following providers are used by this module:
+
+- <a name="provider_azuread"></a> [azuread](#provider\_azuread) (~> 3.0)
 
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 4.0)
 
@@ -37,6 +41,7 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
+- [azuread_service_principal.aadds](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal) (resource)
 - [azurerm_active_directory_domain_service.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service) (resource)
 - [azurerm_active_directory_domain_service_replica_set.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service_replica_set) (resource)
 - [azurerm_active_directory_domain_service_trust.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service_trust) (resource)
@@ -53,13 +58,18 @@ Type:
 
 ```hcl
 object({
-    name                  = string
-    resource_group_name   = optional(string)
-    location              = optional(string)
-    domain_name           = string
-    sku                   = optional(string, "Standard")
-    filtered_sync_enabled = optional(bool, false)
-    tags                  = optional(map(string))
+    name                      = string
+    resource_group_name       = string
+    location                  = string
+    domain_name               = string
+    domain_configuration_type = optional(string)
+    sku                       = optional(string, "Standard")
+    filtered_sync_enabled     = optional(bool, false)
+    tags                      = optional(map(string))
+
+    service_principal = optional(object({
+      use_existing = optional(bool, false)
+    }))
 
     initial_replica_set = object({
       subnet_id = string
@@ -79,9 +89,9 @@ object({
     }))
 
     security = optional(object({
-      sync_kerberos_passwords         = optional(bool, true)
-      sync_ntlm_passwords             = optional(bool, true)
-      sync_on_prem_passwords          = optional(bool, true)
+      sync_kerberos_passwords         = optional(bool, false)
+      sync_ntlm_passwords             = optional(bool, false)
+      sync_on_prem_passwords          = optional(bool, false)
       ntlm_v1_enabled                 = optional(bool, false)
       tls_v1_enabled                  = optional(bool, false)
       kerberos_rc4_encryption_enabled = optional(bool, false)

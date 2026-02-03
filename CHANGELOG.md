@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0 (2026-02-03)
+
+
+### Features
+
+* add initial resources ([45d41a4](https://github.com/CloudNationHQ/terraform-azuread-ds/commit/45d41a42f067f7151d6118b3a9042fab51044d24))
+* add initial resources ([649e959](https://github.com/CloudNationHQ/terraform-azuread-ds/commit/649e959e6585ddfc6472aa975bd7d213e40cbccf))
+* update make docs ([44a732a](https://github.com/CloudNationHQ/terraform-azuread-ds/commit/44a732a4aa29fa56a489e093bbfa312d8a840816))
+
 ## [1.0.0] - 2026-01-05
 
 ### Added

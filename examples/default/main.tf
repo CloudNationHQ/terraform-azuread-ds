@@ -1,13 +1,3 @@
-# import {
-#   to = module.domain_service.azurerm_active_directory_domain_service.this
-#   id = "/subscriptions/eb325ab2-9ad8-4e29-abd1-00876fdd6101/resourceGroups/rg-demo-dev-qfuj/providers/Microsoft.AAD/domainServices/aadds-demo-dev/initialReplicaSetId/2e6c70d9-de32-4e5c-9adb-492150d493ea"
-# }
-
-# import {
-#   to = module.network.azurerm_virtual_network.vnet["vnet"]
-#   id = "/subscriptions/eb325ab2-9ad8-4e29-abd1-00876fdd6101/resourceGroups/rg-demo-dev-qfuj/providers/Microsoft.Network/virtualNetworks/vnet-demo-dev"
-# }
-
 module "naming" {
   source  = "cloudnationhq/naming/azure"
   version = "~> 0.24"
@@ -101,7 +91,8 @@ module "groups" {
 }
 
 module "domain_service" {
-  source = "../.."
+  source  = "cloudnationhq/ds/azuread"
+  version = "~> 1.0"
 
   config = {
     name                      = "aadds-demo-dev"

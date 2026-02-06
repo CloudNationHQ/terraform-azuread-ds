@@ -69,6 +69,7 @@ object({
 
     service_principal = optional(object({
       use_existing = optional(bool, false)
+      other_cloud  = optional(bool, false)
     }))
 
     initial_replica_set = object({

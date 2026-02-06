@@ -1,6 +1,6 @@
 # Azure AD Domain Services service principal
 resource "azuread_service_principal" "aadds" {
-  client_id    = try(var.config.service_principal.other_cloud, false) != false ? "2565bd9d-da50-47d4-8b85-4c97f669dc36" : "6ba9a5d4-8456-4118-b521-9c5ca10cdf84"
+  client_id    = try(var.config.service_principal.other_cloud, false) == false ? "2565bd9d-da50-47d4-8b85-4c97f669dc36" : "6ba9a5d4-8456-4118-b521-9c5ca10cdf84"
   use_existing = try(var.config.service_principal.use_existing, false) != false ? true : false
 }
 

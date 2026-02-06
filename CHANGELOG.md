@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/CloudNationHQ/terraform-azuread-ds/compare/v1.0.0...v1.1.0) (2026-02-06)
+
+
+### Features
+
+* update app id for other Azure Clouds (e.g. US Gov) ([#3](https://github.com/CloudNationHQ/terraform-azuread-ds/issues/3)) ([512a12c](https://github.com/CloudNationHQ/terraform-azuread-ds/commit/512a12c4417c08c776c00902f8330aca727ab25f))
+
 ## 1.0.0 (2026-02-03)
 
 

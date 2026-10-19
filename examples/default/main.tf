@@ -7,7 +7,7 @@ module "naming" {
 
 module "rg" {
   source  = "cloudnationhq/rg/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   groups = {
     demo = {
@@ -19,9 +19,7 @@ module "rg" {
 
 module "network" {
   source  = "cloudnationhq/vnet/azure"
-  version = "~> 9.0"
-
-  naming = local.naming
+  version = "~> 10.0"
 
   vnet = {
     name                = module.naming.virtual_network.name
@@ -32,6 +30,7 @@ module "network" {
 
     subnets = {
       aadds = {
+        name             = "${module.naming.subnet.name}-aadds"
         address_prefixes = ["10.0.1.0/24"]
         network_security_group = {
           name = "${module.naming.network_security_group.name}-aadds"
@@ -92,9 +91,9 @@ module "groups" {
 
 module "domain_service" {
   source  = "cloudnationhq/ds/azuread"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
-  config = {
+  domain_service = {
     name                      = "aadds-demo-dev"
     location                  = module.rg.groups.demo.location
     resource_group_name       = module.rg.groups.demo.name

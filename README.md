@@ -27,7 +27,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) (~> 3.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 5.0)
 
 ## Providers
 
@@ -35,13 +35,13 @@ The following providers are used by this module:
 
 - <a name="provider_azuread"></a> [azuread](#provider\_azuread) (~> 3.0)
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 4.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 5.0)
 
 ## Resources
 
 The following resources are used by this module:
 
-- [azuread_service_principal.aadds](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal) (resource)
+- [azuread_service_principal.this](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal) (resource)
 - [azurerm_active_directory_domain_service.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service) (resource)
 - [azurerm_active_directory_domain_service_replica_set.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service_replica_set) (resource)
 - [azurerm_active_directory_domain_service_trust.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/active_directory_domain_service_trust) (resource)
@@ -50,7 +50,7 @@ The following resources are used by this module:
 
 The following input variables are required:
 
-### <a name="input_config"></a> [config](#input\_config)
+### <a name="input_domain_service"></a> [domain\_service](#input\_domain\_service)
 
 Description: contains domain service configuration
 
@@ -59,8 +59,8 @@ Type:
 ```hcl
 object({
     name                      = string
-    resource_group_name       = string
-    location                  = string
+    resource_group_name       = optional(string)
+    location                  = optional(string)
     domain_name               = string
     domain_configuration_type = optional(string)
     sku                       = optional(string, "Standard")
@@ -78,8 +78,8 @@ object({
 
     notifications = optional(object({
       additional_recipients = optional(list(string), [])
-      notify_dc_admins      = optional(bool, true)
-      notify_global_admins  = optional(bool, true)
+      notify_dc_admins      = optional(bool)
+      notify_global_admins  = optional(bool)
     }))
 
     secure_ldap = optional(object({
@@ -116,6 +116,22 @@ object({
 ## Optional Inputs
 
 The following input variables are optional (have default values):
+
+### <a name="input_location"></a> [location](#input\_location)
+
+Description: default azure region to be used.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)
+
+Description: default resource group to be used.
+
+Type: `string`
+
+Default: `null`
 
 ### <a name="input_tags"></a> [tags](#input\_tags)
 

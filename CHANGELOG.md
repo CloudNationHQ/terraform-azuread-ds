@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0](https://github.com/CloudNationHQ/terraform-azuread-ds/compare/v1.1.0...v2.0.0) (2026-10-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* azurerm v5 upgrade and module standards alignment ([#11](https://github.com/CloudNationHQ/terraform-azuread-ds/issues/11))
+
+### Features
+
+* azurerm v5 upgrade and module standards alignment ([#11](https://github.com/CloudNationHQ/terraform-azuread-ds/issues/11)) ([6b3ccf9](https://github.com/CloudNationHQ/terraform-azuread-ds/commit/6b3ccf9e1423d8d8bd072f55e6ff24080452d80f))
+* **deps:** bump github.com/cloudnationhq/az-cn-go-validor in /tests ([#9](https://github.com/CloudNationHQ/terraform-azuread-ds/issues/9)) ([d0e98e3](https://github.com/CloudNationHQ/terraform-azuread-ds/commit/d0e98e301d292b6b4bf16b83476842dd867a765d))
+
 ## [1.1.0](https://github.com/CloudNationHQ/terraform-azuread-ds/compare/v1.0.0...v1.1.0) (2026-02-06)
 
 

@@ -1,9 +1,9 @@
-variable "config" {
+variable "domain_service" {
   description = "contains domain service configuration"
   type = object({
     name                      = string
-    resource_group_name       = string
-    location                  = string
+    resource_group_name       = optional(string)
+    location                  = optional(string)
     domain_name               = string
     domain_configuration_type = optional(string)
     sku                       = optional(string, "Standard")
@@ -21,8 +21,8 @@ variable "config" {
 
     notifications = optional(object({
       additional_recipients = optional(list(string), [])
-      notify_dc_admins      = optional(bool, true)
-      notify_global_admins  = optional(bool, true)
+      notify_dc_admins      = optional(bool)
+      notify_global_admins  = optional(bool)
     }))
 
     secure_ldap = optional(object({
@@ -54,6 +54,28 @@ variable "config" {
       password               = string
     })), {})
   })
+
+  validation {
+    condition     = lookup(var.domain_service, "location", null) != null || var.location != null
+    error_message = "location must be set on var.domain_service.location or on the module-level var.location."
+  }
+
+  validation {
+    condition     = lookup(var.domain_service, "resource_group_name", null) != null || var.resource_group_name != null
+    error_message = "resource_group_name must be set on var.domain_service.resource_group_name or on the module-level var.resource_group_name."
+  }
+}
+
+variable "location" {
+  description = "default azure region to be used."
+  type        = string
+  default     = null
+}
+
+variable "resource_group_name" {
+  description = "default resource group to be used."
+  type        = string
+  default     = null
 }
 
 variable "tags" {

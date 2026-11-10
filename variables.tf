@@ -13,6 +13,36 @@ variable "domain_service" {
     service_principal = optional(object({
       use_existing = optional(bool, false)
       other_cloud  = optional(bool, false)
+
+      account_enabled               = optional(bool)
+      alternative_names             = optional(set(string))
+      app_role_assignment_required  = optional(bool)
+      description                   = optional(string)
+      login_url                     = optional(string)
+      notes                         = optional(string)
+      notification_email_addresses  = optional(set(string))
+      owners                        = optional(set(string))
+      preferred_single_sign_on_mode = optional(string)
+      tags                          = optional(set(string))
+
+      feature_tags = optional(object({
+        custom_single_sign_on = optional(bool)
+        enterprise            = optional(bool)
+        gallery               = optional(bool)
+        hide                  = optional(bool)
+      }))
+
+      # deprecated by the azuread provider, use feature_tags instead
+      features = optional(object({
+        custom_single_sign_on_app = optional(bool)
+        enterprise_application    = optional(bool)
+        gallery_application       = optional(bool)
+        visible_to_users          = optional(bool)
+      }))
+
+      saml_single_sign_on = optional(object({
+        relay_state = optional(string)
+      }))
     }))
 
     initial_replica_set = object({
@@ -54,6 +84,19 @@ variable "domain_service" {
       password               = string
     })), {})
   })
+
+  validation {
+    condition = (
+      try(var.domain_service.service_principal, null) == null ? true : length([
+        for v in [
+          var.domain_service.service_principal.tags,
+          var.domain_service.service_principal.feature_tags,
+          var.domain_service.service_principal.features
+        ] : v if v != null
+      ]) <= 1
+    )
+    error_message = "service_principal.tags, service_principal.feature_tags and service_principal.features are mutually exclusive, set at most one."
+  }
 
   validation {
     condition     = lookup(var.domain_service, "location", null) != null || var.location != null

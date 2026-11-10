@@ -13,6 +13,28 @@ variable "domain_service" {
     service_principal = optional(object({
       use_existing = optional(bool, false)
       other_cloud  = optional(bool, false)
+
+      account_enabled               = optional(bool)
+      alternative_names             = optional(set(string))
+      app_role_assignment_required  = optional(bool)
+      description                   = optional(string)
+      login_url                     = optional(string)
+      notes                         = optional(string)
+      notification_email_addresses  = optional(set(string))
+      owners                        = optional(set(string))
+      preferred_single_sign_on_mode = optional(string)
+      tags                          = optional(set(string))
+
+      feature_tags = optional(object({
+        custom_single_sign_on = optional(bool)
+        enterprise            = optional(bool)
+        gallery               = optional(bool)
+        hide                  = optional(bool)
+      }))
+
+      saml_single_sign_on = optional(object({
+        relay_state = optional(string)
+      }))
     }))
 
     initial_replica_set = object({
@@ -54,6 +76,16 @@ variable "domain_service" {
       password               = string
     })), {})
   })
+
+  validation {
+    condition = (
+      try(var.domain_service.service_principal, null) == null ? true : (
+        var.domain_service.service_principal.tags == null ||
+        var.domain_service.service_principal.feature_tags == null
+      )
+    )
+    error_message = "service_principal.tags and service_principal.feature_tags are mutually exclusive, set at most one."
+  }
 
   validation {
     condition     = lookup(var.domain_service, "location", null) != null || var.location != null

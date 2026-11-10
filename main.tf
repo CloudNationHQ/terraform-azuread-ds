@@ -2,6 +2,36 @@
 resource "azuread_service_principal" "this" {
   client_id    = try(var.domain_service.service_principal.other_cloud, false) == false ? "2565bd9d-da50-47d4-8b85-4c97f669dc36" : "6ba9a5d4-8456-4118-b521-9c5ca10cdf84"
   use_existing = try(var.domain_service.service_principal.use_existing, false) != false ? true : false
+
+  account_enabled               = try(var.domain_service.service_principal.account_enabled, null)
+  alternative_names             = try(var.domain_service.service_principal.alternative_names, null)
+  app_role_assignment_required  = try(var.domain_service.service_principal.app_role_assignment_required, null)
+  description                   = try(var.domain_service.service_principal.description, null)
+  login_url                     = try(var.domain_service.service_principal.login_url, null)
+  notes                         = try(var.domain_service.service_principal.notes, null)
+  notification_email_addresses  = try(var.domain_service.service_principal.notification_email_addresses, null)
+  owners                        = try(var.domain_service.service_principal.owners, null)
+  preferred_single_sign_on_mode = try(var.domain_service.service_principal.preferred_single_sign_on_mode, null)
+  tags                          = try(var.domain_service.service_principal.tags, null)
+
+  dynamic "feature_tags" {
+    for_each = try(var.domain_service.service_principal.feature_tags, null) != null ? { "this" = var.domain_service.service_principal.feature_tags } : {}
+
+    content {
+      custom_single_sign_on = feature_tags.value.custom_single_sign_on
+      enterprise            = feature_tags.value.enterprise
+      gallery               = feature_tags.value.gallery
+      hide                  = feature_tags.value.hide
+    }
+  }
+
+  dynamic "saml_single_sign_on" {
+    for_each = try(var.domain_service.service_principal.saml_single_sign_on, null) != null ? { "this" = var.domain_service.service_principal.saml_single_sign_on } : {}
+
+    content {
+      relay_state = saml_single_sign_on.value.relay_state
+    }
+  }
 }
 
 # domain service

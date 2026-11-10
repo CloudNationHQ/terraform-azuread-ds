@@ -33,9 +33,9 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
-- <a name="provider_azuread"></a> [azuread](#provider\_azuread) (~> 3.0)
+- <a name="provider_azuread"></a> [azuread](#provider\_azuread) (3.10.0)
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 5.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (5.13.0)
 
 ## Resources
 
@@ -70,6 +70,28 @@ object({
     service_principal = optional(object({
       use_existing = optional(bool, false)
       other_cloud  = optional(bool, false)
+
+      account_enabled               = optional(bool)
+      alternative_names             = optional(set(string))
+      app_role_assignment_required  = optional(bool)
+      description                   = optional(string)
+      login_url                     = optional(string)
+      notes                         = optional(string)
+      notification_email_addresses  = optional(set(string))
+      owners                        = optional(set(string))
+      preferred_single_sign_on_mode = optional(string)
+      tags                          = optional(set(string))
+
+      feature_tags = optional(object({
+        custom_single_sign_on = optional(bool)
+        enterprise            = optional(bool)
+        gallery               = optional(bool)
+        hide                  = optional(bool)
+      }))
+
+      saml_single_sign_on = optional(object({
+        relay_state = optional(string)
+      }))
     }))
 
     initial_replica_set = object({

@@ -89,14 +89,6 @@ object({
         hide                  = optional(bool)
       }))
 
-      # deprecated by the azuread provider, use feature_tags instead
-      features = optional(object({
-        custom_single_sign_on_app = optional(bool)
-        enterprise_application    = optional(bool)
-        gallery_application       = optional(bool)
-        visible_to_users          = optional(bool)
-      }))
-
       saml_single_sign_on = optional(object({
         relay_state = optional(string)
       }))

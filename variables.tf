@@ -32,14 +32,6 @@ variable "domain_service" {
         hide                  = optional(bool)
       }))
 
-      # deprecated by the azuread provider, use feature_tags instead
-      features = optional(object({
-        custom_single_sign_on_app = optional(bool)
-        enterprise_application    = optional(bool)
-        gallery_application       = optional(bool)
-        visible_to_users          = optional(bool)
-      }))
-
       saml_single_sign_on = optional(object({
         relay_state = optional(string)
       }))
@@ -87,15 +79,12 @@ variable "domain_service" {
 
   validation {
     condition = (
-      try(var.domain_service.service_principal, null) == null ? true : length([
-        for v in [
-          var.domain_service.service_principal.tags,
-          var.domain_service.service_principal.feature_tags,
-          var.domain_service.service_principal.features
-        ] : v if v != null
-      ]) <= 1
+      try(var.domain_service.service_principal, null) == null ? true : (
+        var.domain_service.service_principal.tags == null ||
+        var.domain_service.service_principal.feature_tags == null
+      )
     )
-    error_message = "service_principal.tags, service_principal.feature_tags and service_principal.features are mutually exclusive, set at most one."
+    error_message = "service_principal.tags and service_principal.feature_tags are mutually exclusive, set at most one."
   }
 
   validation {

@@ -25,17 +25,6 @@ resource "azuread_service_principal" "this" {
     }
   }
 
-  dynamic "features" {
-    for_each = try(var.domain_service.service_principal.features, null) != null ? { "this" = var.domain_service.service_principal.features } : {}
-
-    content {
-      custom_single_sign_on_app = features.value.custom_single_sign_on_app
-      enterprise_application    = features.value.enterprise_application
-      gallery_application       = features.value.gallery_application
-      visible_to_users          = features.value.visible_to_users
-    }
-  }
-
   dynamic "saml_single_sign_on" {
     for_each = try(var.domain_service.service_principal.saml_single_sign_on, null) != null ? { "this" = var.domain_service.service_principal.saml_single_sign_on } : {}
 
